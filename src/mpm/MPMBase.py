@@ -158,6 +158,16 @@ class Solver:
         print("#", " End Simulation ".center(67,"="), "#", '\n')
 
     def core(self, scene: myScene, neighbor):
+        tbl = getattr(self.sims, 'gravity_table', None)
+        if tbl is not None:
+            idx = int(self.sims.current_time / self.sims.delta)
+            if idx >= tbl.shape[0]:
+                idx = tbl.shape[0] - 1
+            row = tbl[idx]
+            if tbl.shape[1] == 3:
+                self.sims.gravity = vec3f(row.tolist())
+            else:
+                self.sims.gravity = vec3f([row[0], row[1], 0.])
         self.engine.reset_grid_messages(scene)
         self.engine.bulid_neighbor_list(self.sims, scene, neighbor)
         self.engine.compute(self.sims, scene)

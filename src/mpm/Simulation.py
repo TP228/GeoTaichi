@@ -1,5 +1,6 @@
 import taichi as ti
 import warnings
+import numpy as np
 
 from src.utils.ObjectIO import DictIO
 from src.utils.TypeDefination import vec2f, vec3i, vec3f
@@ -14,6 +15,7 @@ class Simulation(object):
         self.domain = [0., 0., 0.]
         self.boundary = [0, 0, 0]
         self.gravity = [0., 0., 0.]
+        self.gravity_table = None
         self.block_size = [128, 4]
         self.background = 0.
         self.alphaPIC = 0.
@@ -139,11 +141,28 @@ class Simulation(object):
             self.activate_period_boundary()
 
     def set_gravity(self, gravity):
-        self.gravity = gravity
-        if len(gravity) == 2:
-            gravity = [gravity[0], gravity[1], 0.]
-        if isinstance(gravity, (list, tuple)):
-            self.gravity = vec3f(gravity)
+        try:
+            arr = np.array(gravity, dtype=float)
+        except Exception:
+            arr = None
+
+        if arr is not None and arr.ndim == 2 and arr.shape[1] in (2, 3):
+            self.gravity_table = arr
+            first = arr[0]
+            if arr.shape[1] == 3:
+                self.gravity = vec3f(first.tolist())
+            else:
+                self.gravity = vec3f([first[0], first[1], 0.])
+        else:
+            self.gravity_table = None
+            if not isinstance(gravity, (list, tuple)):
+                raise ValueError("Fixed gravity must be a list or tuple of length 2 or 3")
+            v = list(gravity)
+            if len(v) == 2:
+                v = [v[0], v[1], 0.]
+            elif len(v) != 3:
+                raise ValueError("Fixed gravity must have length 2 or 3")
+            self.gravity = vec3f(v)
 
     def set_background_damping(self, background_damping):
         self.background_damping = background_damping
