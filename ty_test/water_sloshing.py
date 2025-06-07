@@ -3,12 +3,12 @@ from geotaichi import *
 import numpy as np
 
 total_time = 20.
-dt = 1e-6
+dt = 1e-4
 t_arr = np.arange(0, total_time, dt)
 
 g = 9.81
 A = np.deg2rad(5)
-omega = 2 * np.pi / (6.61 / 1)
+omega = 2 * np.pi / 6.61
 
 theta_t = A * np.sin(omega * t_arr)
 
@@ -17,7 +17,7 @@ by_t = -g * np.cos(theta_t)
 
 gravity_table = np.stack([bx_t, by_t], axis=1)  # shape = (num_time_steps, 2)
 
-init(dim=2, device_memory_GB=3.7)
+init(dim=2, device_memory_GB=6)
 
 mpm = MPM()
 
@@ -25,16 +25,16 @@ mpm.set_configuration(domain=[1., 1.],
                       background_damping=0.0,
                       alphaPIC=1.0, 
                       mapping="USL", 
-                      shape_function="Linear",
+                      shape_function="QuadBSpline",
                       gravity=gravity_table,
                     #   gravity=[0., -9.8],
                       material_type="Fluid",
-                      velocity_projection="Affine") #"also support for Taylor PIC"
+                      velocity_projection="Taylor") #"also support for Taylor PIC"
 
 mpm.set_solver({
                       "Timestep":         dt,
-                      "SimulationTime":   20,
-                      "SaveInterval":     1e-3,
+                      "SimulationTime":   total_time,
+                      "SaveInterval":     1e-2,
                       "SavePath":         './Sloshing'
                  }) 
                       
