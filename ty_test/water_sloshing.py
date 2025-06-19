@@ -8,7 +8,7 @@ t_arr = np.arange(0, total_time, dt)
 
 g = 9.81
 A = np.deg2rad(5)
-omega = 2 * np.pi / 6.61
+omega = 2 * np.pi / 1.15
 
 theta_t = A * np.sin(omega * t_arr)
 
@@ -25,10 +25,11 @@ mpm.set_configuration(domain=[1., 1.],
                       background_damping=0.0,
                       alphaPIC=1.0, 
                       mapping="USL", 
-                      shape_function="QuadBSpline",
+                      shape_function="GIMP",
                       gravity=gravity_table,
                     #   gravity=[0., -9.8],
                       material_type="Fluid",
+                    #   stabilize="F-Bar Method",
                       velocity_projection="Taylor") #"also support for Taylor PIC"
 
 mpm.set_solver({
