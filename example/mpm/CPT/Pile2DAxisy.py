@@ -7,7 +7,7 @@ mpm = MPM()
 mpm.set_configuration(domain=ti.Vector([0.6, 2.508]),
                       is_2DAxisy=True,
                       background_damping=0.2,
-                      gravity=ti.Vector([0., -9.8]),
+                      gravity=[0., -9.8],
                       alphaPIC=0.2, 
                       mapping="USF", 
                       shape_function="CubicBSpline",
@@ -22,7 +22,7 @@ mpm.set_solver(solver={
 
 mpm.memory_allocate(memory={
                                 "max_material_number":    1,
-                                "max_particle_number":    99500,
+                                "max_particle_number":    102000,
                                 "max_constraint_number":  {
                                                                "max_velocity_constraint":     134474,
                                                                "max_particle_traction_constraint":   134474,

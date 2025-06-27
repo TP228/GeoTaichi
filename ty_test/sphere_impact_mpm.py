@@ -28,7 +28,7 @@ mpm.memory_allocate(memory={
                                                           }
                             })
 
-mpm.add_contact(contact_type="MPMContact")
+mpm.add_contact(contact_type="MPMContact", friction=0.)
 
 mpm.add_material(model="LinearElastic",
                  material={
